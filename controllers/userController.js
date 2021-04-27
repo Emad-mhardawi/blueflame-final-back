@@ -1,7 +1,23 @@
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
-const generateToken= require('../utils/generateToken')
+const generateToken= require('../utils/generateToken');
+const nodemailer = require('nodemailer');
+const sedgridTransport = require('nodemailer-sendgrid-transport');
+
+
+
+
+// initialize nodemailer transporter
+const transporter = nodemailer.createTransport(sedgridTransport({
+    auth:{
+        api_key: process.env.SEND_GRID_KEY
+    }
+}))
+
+
+
+
 
 //@ route: POST/  /register
 //@ description: add new user
@@ -11,14 +27,12 @@ exports.postRegisterUser = asyncHandler(async (req, res, next) => {
   if (!email) {
     res.status(400);
     throw new Error("email is required");
-  }
-
+}
   if (!password || password.length < 6) {
     res.status(400);
     throw new Error("password is required and have to be at least 6 characters long");
 }
-
-  if (password !== confirmedPassword) {
+if (password !== confirmedPassword) {
     res.status(400);
     throw new Error("password dose not match");
   }
@@ -43,7 +57,13 @@ exports.postRegisterUser = asyncHandler(async (req, res, next) => {
   });
 
   if (user) {
-    res.status(201).json({
+     const email1 = await transporter.sendMail({
+          to: user.email,
+          from:'emad.mhardawi@chasacademy.se',
+          subject:'Signup succeeded!',
+          html: '<h1> you successfully signed up </h1>'
+      })
+    res.status(200).json({
       username: user.username,
     });
   } else {
