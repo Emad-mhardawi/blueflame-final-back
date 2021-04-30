@@ -8,8 +8,20 @@ const orderRoutes = require('./routes/orderRoutes');
 const multer = require('multer');
 const app = express();
 app.use(cors())
-app.use(express.json());
+const orderController = require('./controllers/orderController');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+
+
+
+const bodyParser = require('body-parser');
+const Order = require('./models/orderModel');
+
+app.use('/webhook',bodyParser.raw({type: 'application/json'}),orderController.webhook )
+
+
+
+app.use(express.json());
 
 
 app.use('/images',express.static('images'))
