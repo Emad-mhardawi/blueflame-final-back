@@ -3,19 +3,17 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const generateToken= require('../utils/generateToken');
 const nodemailer = require('nodemailer');
-const sedgridTransport = require('nodemailer-sendgrid-transport');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
 
 
 
 
 // initialize nodemailer transporter
-const transporter = nodemailer.createTransport(sedgridTransport({
+const transporter = nodemailer.createTransport(sendgridTransport({
     auth:{
         api_key: process.env.SEND_GRID_KEY
     }
 }))
-
-
 
 
 
@@ -57,7 +55,7 @@ if (password !== confirmedPassword) {
   });
 
   if (user) {
-     const email1 = await transporter.sendMail({
+     const sendmail = await transporter.sendMail({
           to: user.email,
           from:'emad.mhardawi@chasacademy.se',
           subject:'Signup succeeded!',

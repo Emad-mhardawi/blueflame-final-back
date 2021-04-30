@@ -4,6 +4,7 @@ const cors =require('cors');
 require('dotenv').config()
 const {notFound, errorHandler} = require('./middleware/errorMiddleware');
 const userRoutes = require('./routes/userRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 const multer = require('multer');
 const app = express();
 app.use(cors())
@@ -35,6 +36,7 @@ app.use(multer({storage:fileStorage, fileFilter:fileFilter }).single('image'))
 
 
 app.use(userRoutes);
+app.use(orderRoutes)
 app.use(notFound)
 app.use(errorHandler)
 
