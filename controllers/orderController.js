@@ -49,7 +49,7 @@ exports.checkoutSession = asyncHandler(async (req, res, next)=>{
             status:'unpaid',
         },
 
-    })
+    }) 
     
     /// create checkout session stripe
     const session = await stripe.checkout.sessions.create({
