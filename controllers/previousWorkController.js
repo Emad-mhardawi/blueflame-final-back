@@ -5,9 +5,20 @@ const asyncHandler = require("express-async-handler");
 
 
 exports.getPreviousWork = asyncHandler(async (req, res, next) => {
- const previousWork =  await PreviousWork.find({});
- if(previousWork){
-     res.status(200).send(previousWork)
+    const page_size = 10;
+    const page = req.query.page || 0 ;
+    const total = await PreviousWork.countDocuments({})
+
+ const previousWork =  await PreviousWork.find({})
+ .limit(page_size)
+ .skip(page_size * page) 
+ 
+ if(previousWork){ 
+     console.log(total)
+     res.status(200).send({
+         totalPages : Math.ceil(total / page_size),
+         previousWork
+        })
  }else{
     res.status(404);
     throw new Error("no previous work found");
@@ -16,6 +27,7 @@ exports.getPreviousWork = asyncHandler(async (req, res, next) => {
 
 exports.PostAddPreviousWork = asyncHandler(async (req, res, next) => {
  const {name, category, description, madeBy, imageUrl} = req.body;
+
  if (!name) {
     res.status(400);
     throw new Error("name is required");
