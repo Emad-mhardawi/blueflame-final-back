@@ -6,17 +6,19 @@ const {notFound, errorHandler} = require('./middleware/errorMiddleware');
 const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const portraitRoutes = require('./routes/portraitRoutes');
+const PreviousWorkRoutes = require('./routes/previousWorkRoutes');
 const multer = require('multer');
 const app = express();
 app.use(cors())
 const orderController = require('./controllers/orderController');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 
 
 
 
 const bodyParser = require('body-parser');
-const Order = require('./models/orderModel');
+
+
 
 app.use('/webhook',bodyParser.raw({type: 'application/json'}),orderController.webhook )
 
@@ -49,7 +51,8 @@ app.use(multer({storage:fileStorage, fileFilter:fileFilter }).single('image'))
 
 
 app.use(userRoutes);
-app.use(orderRoutes)
+app.use(orderRoutes),
+app.use(PreviousWorkRoutes);
 app.use(portraitRoutes);
 app.use(notFound)
 app.use(errorHandler)
