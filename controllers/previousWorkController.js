@@ -1,17 +1,30 @@
 const PreviousWork = require("../models/previousWorkModel");
 const asyncHandler = require("express-async-handler");
 
-
-
-
 exports.getPreviousWork = asyncHandler(async (req, res, next) => {
-    const page_size = 10;
+    const page_size = 14;
     const page = req.query.page || 0 ;
-    const total = await PreviousWork.countDocuments({})
+    const category = req.query.category;
+    console.log(category);
 
- const previousWork =  await PreviousWork.find({})
- .limit(page_size)
- .skip(page_size * page) 
+    
+
+    let total;
+    let previousWork;
+    if(category){
+        total = await PreviousWork.countDocuments({category:category})
+        previousWork =  await PreviousWork.find({category:category})
+       .limit(page_size)
+       .skip(page_size * page) 
+       
+    }else{
+        total = await PreviousWork.countDocuments({})
+         previousWork =  await PreviousWork.find({})
+        .limit(page_size)
+        .skip(page_size * page) 
+    }
+
+ 
  
  if(previousWork){ 
      console.log(total)

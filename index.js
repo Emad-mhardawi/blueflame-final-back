@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const portraitRoutes = require('./routes/portraitRoutes');
 const PreviousWorkRoutes = require('./routes/previousWorkRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const multer = require('multer');
 const app = express();
 app.use(cors())
@@ -54,6 +55,7 @@ app.use(userRoutes);
 app.use(orderRoutes),
 app.use(PreviousWorkRoutes);
 app.use(portraitRoutes);
+app.use(adminRoutes)
 app.use(notFound)
 app.use(errorHandler)
 
