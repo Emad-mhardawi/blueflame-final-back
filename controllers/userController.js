@@ -101,3 +101,51 @@ exports.login = asyncHandler(async (req, res, next) => {
     throw new Error("invalid email or password");
   }
 });
+
+
+//@ route: GET/  /profile
+//@ description: get user data
+//@ access: private
+exports.getUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  if(user){
+    res.json({
+      _id:user._id,
+      username:user.username,
+      email:user.email,
+      isAdmin:user.isAdmin
+    })
+  }else{
+    res.status(404)
+    throw new Error('user not fount')
+  }
+});
+
+
+//@ route: PUT /profile
+//@ description: update user profile
+//@ access: private
+exports.updateUserProfile = asyncHandler(async (req, res, next) => {
+ const user = await User.findById(req.user._id);
+ if(user){
+   user.username = req.body.username || user.username;
+   user.email = req.body.email || user.email;
+
+   if(req.body.password){
+     const hashedPassword = (await bcrypt.hash(req.body.password, 12)).toString();
+     user.password = hashedPassword
+   }
+
+   const updatedUser = await user.save();
+   res.json({
+    _id:updatedUser._id,
+    username:updatedUser.username,
+    email:updatedUser.email,
+    isAdmin:updatedUser.isAdmin
+  })
+ }else{
+   res.status(404);
+   throw new Error('')
+ }
+});
+
