@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 //@ route: POST/  /create-checkout-session
 //@ description:  Create a Checkout Session
 //@ access: private
-const DOMAIN = 'http://localhost:3001/checkout';
+const DOMAIN = 'http://localhost:3000/checkout';
 exports.checkoutSession = asyncHandler(async (req, res, next)=>{
     const {portraitName, portraitStyle, portraitSize, fullBody, commentsToArtist} = req.body;
     const image = req.file;
@@ -55,6 +55,7 @@ exports.checkoutSession = asyncHandler(async (req, res, next)=>{
     const session = await stripe.checkout.sessions.create({
         payment_method_types : ['card'],
         customer_email: req.user.email,
+        
         client_reference_id: newOrder._id.toString(),
         line_items :[{
             price_data:{
@@ -62,6 +63,7 @@ exports.checkoutSession = asyncHandler(async (req, res, next)=>{
                 product_data:{
                 name: portraitName,
                 images: ['https://i.imgur.com/EHyR2nP.png'],
+               
             },
             unit_amount: orderPrice * 100,
         },
@@ -69,6 +71,7 @@ exports.checkoutSession = asyncHandler(async (req, res, next)=>{
             },
         ],
             mode: 'payment',
+            allow_promotion_codes: true,
             success_url: `${DOMAIN}?success=true`,
             cancel_url: `${DOMAIN}?canceled=true`,
             
