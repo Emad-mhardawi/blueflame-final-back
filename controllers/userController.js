@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const generateToken= require('../utils/generateToken');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
+const Order = require("../models/orderModel");
 
 
 
@@ -145,7 +146,20 @@ exports.updateUserProfile = asyncHandler(async (req, res, next) => {
   })
  }else{
    res.status(404);
-   throw new Error('')
+   throw new Error('some thing went wrong')
  }
 });
+
+
+//@ route: GET /user/orders
+//@ description: Get all orders
+//@ access: private
+exports.getUserOrders = asyncHandler(async (req, res, next) => {
+
+  const orders = await Order.find({user:req.user._id})
+  if(orders){
+    res.send(orders)
+  }
+ });
+ 
 

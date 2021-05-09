@@ -10,19 +10,12 @@ const PreviousWorkRoutes = require('./routes/previousWorkRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const multer = require('multer');
 const app = express();
-app.use(cors())
+
 const orderController = require('./controllers/orderController');
 
 
-
-
-
-const bodyParser = require('body-parser');
-
-
-
-app.use('/webhook',bodyParser.raw({type: 'application/json'}),orderController.webhook )
-
+app.use('/webhook',express.raw({type: 'application/json'}),orderController.webhook )
+app.use(cors())
 
 
 app.use(express.json());
