@@ -5,6 +5,7 @@ const protect = require('../middleware/authMiddleware');
 const isAdmin = require('../middleware/isAdminMiddleware');
  
 router.get('/admin/users',protect, isAdmin, adminController.getUsers);
+router.delete('/admin/deleteUser',protect, isAdmin, adminController.deleteUser);
 
 
 

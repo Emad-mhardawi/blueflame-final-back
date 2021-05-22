@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 //@ route: POST/  /create-checkout-session
 //@ description:  Create a Checkout Session
 //@ access: private
-const DOMAIN = 'http://localhost:3000/checkout';
+const DOMAIN = 'http://localhost:3000';
 exports.checkoutSession = asyncHandler(async (req, res, next)=>{
     const {portraitName, portraitStyle, portraitSize, fullBody, commentsToArtist} = req.body;
     const image = req.file;
@@ -72,7 +72,7 @@ exports.checkoutSession = asyncHandler(async (req, res, next)=>{
         ],
             mode: 'payment',
             allow_promotion_codes: true,
-            success_url: `${DOMAIN}?success=true`,
+            success_url: `${DOMAIN}/profile?success=true`,
             cancel_url: `${DOMAIN}?canceled=true`,
             
     });
