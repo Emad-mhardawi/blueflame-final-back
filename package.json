@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "14.16.1" 
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "start:dev": "nodemon index.js "
   },
   "author": "Emad Mhardawi",
   "license": "ISC",
@@ -25,5 +29,5 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
-  }
+  } 
 }

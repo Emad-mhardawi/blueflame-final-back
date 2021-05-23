@@ -20,6 +20,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 //@ access: private/admin
 exports.deleteUser = asyncHandler(async (req, res, next) => {
   const userId = req.query.userId;
+  console.log(req.query)
   const user = await User.findById(userId);
   if (!user) {
     res.status(404);
