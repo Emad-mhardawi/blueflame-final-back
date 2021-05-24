@@ -10,7 +10,7 @@ router.get('/profile', protect,  userController.getUser);
 router.put('/profile', protect,  userController.updateUserProfile);
 router.get('/user/orders', protect,  userController.getUserOrders);
 router.post('/forgotPassword',userController.forgotPassword);
-router.post('/resetPassword/:resetToken',userController.resetPassword);
+router.post('/resetPassword',userController.resetPassword);
 
 
 
