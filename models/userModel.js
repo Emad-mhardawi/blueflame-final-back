@@ -26,6 +26,13 @@ const UserSchem = Schema(
       required: true,
       default: false,
     },
+
+    passwordResetToken:{
+      type:String, 
+    } ,
+    passwordResetExpires:{
+      type: Date 
+    } 
   },
   {
     timestamps: true,

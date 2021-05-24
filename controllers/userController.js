@@ -5,6 +5,7 @@ const generateToken= require('../utils/generateToken');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 const Order = require("../models/orderModel");
+const crypto = require('crypto');
 
 
 
@@ -162,4 +163,57 @@ exports.getUserOrders = asyncHandler(async (req, res, next) => {
   }
  });
  
+
+ //@ route: Post /forgotPassword
+//@ access: public
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  const email = req.body.email
+  if(!email){
+    res.status(400);
+   throw new Error('please provide an email')
+  }
+  //1 Get user based on posted email
+  const user = await User.findOne({email:email})
+  if(!user){
+    res.status(404);
+   throw new Error('user not found')
+  }
+
+  //2 generate the random reset token
+  const resetToken = await crypto.randomBytes(32).toString('hex');
+  
+  user.passwordResetToken = await crypto.createHash('sha256').update(resetToken).digest('hex');
+
+  user.passwordResetExpires = await Date.now() + 10 * 60 * 1000
+
+  user.save()
+  
+  //3 Send it to user email
+  const resetUrl = await `http://localhost:5000/resetPassword/${resetToken}`
+  const sendmail = await transporter.sendMail({
+    to: user.email,
+    from:'emad.mhardawi@chasacademy.se',
+    subject:'password reset!',
+    html: `
+    <h3>blue flame reset password</h3>
+    <P> forgot your password ? please follow this link to reset your password </P>
+    ${resetUrl}
+    this link will be valid for only 10 minutes
+    ` 
+})
+
+if(sendmail){
+  res.status(200).json({
+    message: 'we send a reset password link to your email'
+  })
+}
+ 
+ });
+ 
+
+ exports.resetPassword = asyncHandler(async (req, res, next) => {
+
+ });
+ 
+
 
