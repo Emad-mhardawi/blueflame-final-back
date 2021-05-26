@@ -9,8 +9,10 @@ const portraitRoutes = require('./routes/portraitRoutes');
 const PreviousWorkRoutes = require('./routes/previousWorkRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const multer = require('multer');
-const app = express();
+const helmet = require('helmet');
 
+
+const app = express();
 const orderController = require('./controllers/orderController');
 
 
@@ -51,6 +53,7 @@ app.use(portraitRoutes);
 app.use(adminRoutes)
 app.use(notFound)
 app.use(errorHandler)
+app.use(helmet());
 
 connectDb();
 const PORT = process.env.PORT || 5000;
