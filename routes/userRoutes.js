@@ -11,6 +11,7 @@ router.put('/profile', protect,  userController.updateUserProfile);
 router.get('/user/orders', protect,  userController.getUserOrders);
 router.post('/forgotPassword',userController.forgotPassword);
 router.post('/resetPassword',userController.resetPassword);
+router.post('/contact',userController.contactUs);
 
 
 

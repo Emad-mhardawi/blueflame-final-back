@@ -237,6 +237,7 @@ if(!user){
   res.json({message: 'your link has expired'})
 }
 
+// 2- if token has not expired, and there is a user set new password
 if(user){
   const hashedPassword = (await bcrypt.hash(password, 12)).toString();
   res.json({message: 'you have reset your password successfully'})
@@ -245,7 +246,72 @@ if(user){
  user.passwordResetExpires=undefined
  user.save()
 }
- // 2- if token has not expired, and there is a user set new password
  
  
+ 
+});
+
+
+
+//@ route: PUT /profile
+//@ description: update user profile
+//@ access: private
+exports.updateUserProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.username = req.body.username || user.username;
+    user.email = req.body.email || user.email;
+
+    if (req.body.password) {
+      const hashedPassword = (
+        await bcrypt.hash(req.body.password, 12)
+      ).toString();
+      user.password = hashedPassword;
+    }
+
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("some thing went wrong");
+  }
+});
+
+//@ route: POST /Contact-us
+//@ description: get messages from users
+//@ access: public
+exports.contactUs = asyncHandler(async (req, res, next) => {
+const {username, email, message} = req.body;
+
+if(!email){
+  res.status(400);
+  throw new Error("email is required");
+}
+
+if(!message){
+  res.status(400);
+  throw new Error("you can't send an empty message");
+}
+
+const sendmail = await transporter.sendMail({
+  to: "emad.mhardawi@chasacademy.se",
+  from: "emad.mhardawi@chasacademy.se",
+  subject: "user message",
+  html: `<h1> message from ${username} </h1>
+  <p> ${message}</p>
+  `,
+});
+
+if(sendmail){
+  res.json('your message has been send')
+}else{
+  res.status(400).json("something went wrong, please try again later");
+ }
+
+
 });
